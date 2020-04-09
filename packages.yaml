@@ -8,6 +8,15 @@ frameworks:
   builder/lib/*:
     npm: ./node_modules/@amoebajs/builder/lib/*
     src: ../builder/src/index
+  basic-modules:
+    npm: ./node_modules/@amoebajs/basic-modules
+    src: ../basic-modules/src/index
+  basic-modules/es/*:
+    npm: ./node_modules/@amoebajs/basic-modules/lib/*
+    src: ../basic-modules/src/index
+  basic-modules/lib/*:
+    npm: ./node_modules/@amoebajs/basic-modules/lib/*
+    src: ../basic-modules/src/index
 packages:
   react:
     npm: ./node_modules/react/cjs/react.production.min.js

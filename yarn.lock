@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@amoebajs/basic-modules@^0.0.1-alpha.1585738052983":
+  version "0.0.1-alpha.1585738052983"
+  resolved "https://registry.npm.taobao.org/@amoebajs/basic-modules/download/@amoebajs/basic-modules-0.0.1-alpha.1585738052983.tgz#9c288bf563b924504af558f1d46492eef44d31a3"
+  integrity sha1-nCiL9WO5JFBK9Vjx1GSS7vRNMaM=
+
 "@amoebajs/builder@^0.0.2-alpha.1585734024405":
   version "0.0.2-alpha.1585734024405"
   resolved "https://registry.npmjs.org/@amoebajs/builder/-/builder-0.0.2-alpha.1585734024405.tgz#f5b0c04770f6ec4d7f6ef77d2c5fe0942b8c7fc9"
