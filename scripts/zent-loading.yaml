@@ -1,0 +1,117 @@
+provider: react
+framework:
+  sdk: "0.0.1"
+components:
+  - id: GridLayout
+    name: grid-layout
+    module: ambjs-layout-module
+    version: 0.0.1-beta.0
+  - id: StackLayout
+    name: stack-layout
+    module: ambjs-layout-module
+    version: 0.0.1-beta.0
+  - id: ZentButton
+    name: button
+    module: zent-module
+    version: "0.0.1"
+  - id: ZentLoading
+    name: loading
+    module: zent-module
+    version: "0.0.1"
+directives:
+  - id: GlobalState
+    name: global-state
+    module: ambjs-common-module
+    version: "0.0.1-beta.0"
+  - id: CustomClick
+    name: custom-click
+    module: ambjs-common-module
+    version: "0.0.1-beta.0"
+  - id: ZentCssImport
+    name: base-css
+    module: zent-module
+    version: "0.0.1"
+compositions: []
+page:
+  ref: ZentLoading
+  id: App
+  slot: app
+  input:
+    stateName:
+      type: literal
+      expression: loading
+  attach:
+    display:
+      type: childRefs
+      expression:
+        - id: GridLayoutChild01
+          value: "!loading"
+  children:
+    - ref: GridLayout
+      id: GridLayoutChild01
+      input:
+        basic:
+          height:
+            type: literal
+            expression: 100vh
+          background:
+            type: literal
+            expression: "#fea500"
+          padding:
+            type: literal
+            expression:
+              - [all, 10px]
+      children:
+        - ref: StackLayout
+          id: StackLayoutChild01
+          input:
+            basic:
+              background:
+                type: literal
+                expression: "#888888"
+          directives:
+            - ref: CustomClick
+              id: CustomClickInvoke01
+              input:
+                host:
+                  type: literal
+                  expression: ZentButtonInstance02
+                expression:
+                  type: literal
+                  expression:
+                    vars:
+                      - loadingState is $(loading | bind:state)
+                      - updateLoading is $(loading | bind:setState)
+                    expressions:
+                      - setTimeout(() => updateLoading(loadingState), 2000);
+                      - return updateLoading(!loadingState)
+          children:
+            - ref: ZentButton
+              id: ZentButtonInstance02
+              props:
+                children:
+                  type: literal
+                  syntaxType: string
+                  expression: BUTTON01
+            - ref: ZentButton
+              id: ZentButtonInstance03
+              props:
+                children:
+                  type: literal
+                  syntaxType: string
+                  expression: BUTTON02
+                type:
+                  type: literal
+                  syntaxType: string
+                  expression: primary
+            - ref: ZentButton
+              id: ZentButtonInstance04
+              props:
+                children:
+                  type: literal
+                  syntaxType: string
+                  expression: BUTTON03
+                type:
+                  type: literal
+                  syntaxType: string
+                  expression: danger

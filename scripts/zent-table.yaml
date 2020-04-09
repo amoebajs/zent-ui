@@ -1,0 +1,116 @@
+provider: react
+framework:
+  sdk: "0.0.1"
+components:
+  - id: GridLayout
+    name: grid-layout
+    module: ambjs-layout-module
+    version: 0.0.1-beta.0
+  - id: ZentTable
+    name: universal-table
+    module: zent-module
+    version: 0.0.1-beta.0
+directives:
+  - id: EntityState
+    name: entity-state
+    module: ambjs-common-module
+    version: 0.0.1-beta.0
+  - id: HttpCall
+    name: http-call
+    module: ambjs-common-module
+    version: 0.0.1-beta.0
+  - id: ZentTableColumn
+    name: universal-table-column
+    module: zent-module
+    version: 0.0.1-beta.0
+page:
+  ref: GridLayout
+  id: App
+  slot: app
+  input:
+    basic:
+      padding:
+        type: literal
+        expression:
+          - [left, 24px]
+          - [right, 24px]
+          - [top, 36px]
+  directives:
+    - ref: EntityState
+      id: EntityStateIns01
+      input:
+        name:
+          type: literal
+          expression: AppContext
+        state:
+          type: literal
+          expression:
+            - [tableData, {}]
+  children:
+    - ref: ZentTable
+      id: Section01
+      input:
+        stateName:
+          type: literal
+          expression: tableData
+        fetchUrl:
+          type: literal
+          expression: https://www.baidu.com
+      directives:
+        - ref: ZentTableColumn
+          id: TableColumnInstance01
+          input:
+            name:
+              type: literal
+              expression: field01
+            title:
+              type: literal
+              expression: 字段01
+            width:
+              type: literal
+              expression: 100
+            mode:
+              type: literal
+              expression: left
+        - ref: ZentTableColumn
+          id: TableColumnInstance02
+          input:
+            name:
+              type: literal
+              expression: field02
+            title:
+              type: literal
+              expression: 字段02
+            width:
+              type: literal
+              expression: 100
+            mode:
+              type: literal
+              expression: right
+        - ref: ZentTableColumn
+          id: TableColumnInstance03
+          input:
+            name:
+              type: literal
+              expression: field03
+            title:
+              type: literal
+              expression: 字段03
+        - ref: ZentTableColumn
+          id: TableColumnInstance04
+          input:
+            name:
+              type: literal
+              expression: field04
+            title:
+              type: literal
+              expression: 字段04
+        - ref: ZentTableColumn
+          id: TableColumnInstance05
+          input:
+            name:
+              type: literal
+              expression: field05
+            title:
+              type: literal
+              expression: 字段05

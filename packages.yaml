@@ -1,0 +1,14 @@
+frameworks:
+  builder:
+    npm: ./node_modules/@amoebajs/builder
+    src: ../builder/src/index
+  builder/es/*:
+    npm: ./node_modules/@amoebajs/builder/lib/*
+    src: ../builder/src/index
+  builder/lib/*:
+    npm: ./node_modules/@amoebajs/builder/lib/*
+    src: ../builder/src/index
+packages:
+  react:
+    npm: ./node_modules/react/cjs/react.production.min.js
+    src: ./node_modules/react/cjs/react.production.min.js
