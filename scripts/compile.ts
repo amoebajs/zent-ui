@@ -3,7 +3,8 @@ import * as path from "path";
 import jsyaml from "js-yaml";
 import chalk from "chalk";
 import { Factory } from "@amoebajs/builder";
-import { CommonModule, LayoutModule, ZentModule, CompositionModule } from "../src";
+import { CommonModule, LayoutModule, CompositionModule } from "@amoebajs/basic-modules";
+import { ZentModule } from "../index";
 
 if (process.env.ENV_MODE === "watch") {
   require("./watch-config");

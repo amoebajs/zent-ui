@@ -55,7 +55,7 @@ page:
           expression: tableData
         fetchUrl:
           type: literal
-          expression: https://www.baidu.com
+          expression: https://www.demo.com/fetch?type=table
       directives:
         - ref: ZentTableColumn
           id: TableColumnInstance01

@@ -92,7 +92,7 @@ export class UniversalTable extends ZentComponent<IUniversalTable> implements IA
           expressions: [
             "try {",
             // `let promise = Promise.resolve({ items: [], pagination: { current: current + 1, pageSize, total: 200 } });`,
-            `const { items, pagination } = await ${axiosFn}({ url: \`https://www.baidu.com?current=\${current}&pageSize=\${pageSize}\`});`,
+            `const { items, pagination } = await ${axiosFn}({ url: \`${this.unionQueryWithFetchApi()}\`});`,
             "console.log(items);",
             "console.log(pagination);",
             `setState({ dataset: items || [], pagination: { ...pagination } });`,
@@ -105,6 +105,11 @@ export class UniversalTable extends ZentComponent<IUniversalTable> implements IA
     this.addUseCallback(this.tableChangeCallback.name, `async ({current, pageSize}: any) => { ${expression} }`, [
       this.tableDataVar.name,
     ]);
+  }
+
+  private unionQueryWithFetchApi() {
+    const fetchUrl = this.tableFetchUrl ?? "";
+    return `${fetchUrl}${fetchUrl.indexOf("?") < 0 ? "?" : "&"}current=\${current}&pageSize=\${pageSize}`;
   }
 
   public afterDirectivesAttach() {

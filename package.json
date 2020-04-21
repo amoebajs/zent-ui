@@ -26,8 +26,8 @@
     "rc": "yarn build && node scripts/rc.publish.js"
   },
   "peerDependencies": {
-    "@amoebajs/builder": "*",
-    "@amoebajs/basic-modules": "*"
+    "@amoebajs/basic-modules": "*",
+    "@amoebajs/builder": "*"
   },
   "devDependencies": {
     "@amoebajs/basic-modules": "^0.0.1-alpha.1585738052983",
@@ -36,6 +36,7 @@
     "@types/lodash": "^4.14.149",
     "@types/webpack": "^4.41.0",
     "@types/webpack-dev-server": "^3.10.0",
+    "axios": "^0.19.2",
     "chalk": "^3.0.0",
     "copy": "^0.3.2",
     "cross-env": "^6.0.3",
