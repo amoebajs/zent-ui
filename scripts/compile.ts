@@ -1,10 +1,13 @@
-import "./watch-config";
 import * as fs from "fs";
 import * as path from "path";
 import jsyaml from "js-yaml";
 import chalk from "chalk";
 import { Factory } from "@amoebajs/builder";
 import { CommonModule, LayoutModule, ZentModule, CompositionModule } from "../src";
+
+if (process.env.ENV_MODE === "watch") {
+  require("./watch-config");
+}
 
 const openfile = process.argv.find(i => i.startsWith("--open=")) || "--open=layout.yaml";
 const format = process.argv.find(i => i.startsWith("--format=")) || "--format=false";
