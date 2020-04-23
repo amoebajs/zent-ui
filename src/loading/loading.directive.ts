@@ -22,10 +22,10 @@ export class ZentLoadingDirective extends ZentDirective {
       this.helper.createImport("zent/es/loading/BlockLoading", this.comp.name),
       this.helper.createImport("zent/css/loading.css"),
     ]);
-    this.render.appendRootEleChangeFns(pageRoot =>
+    this.render.component.appendEleChangeFns(pageRoot =>
       this.createNode("jsx-element")
         .setTagName(this.comp.name)
-        .addJsxAttr("loading", this.expression ?? this.render.createStateAccessSyntax(this.stateName))
+        .addJsxAttr("loading", this.expression ?? this.render.component.createStateAccessSyntax(this.stateName))
         .addJsxChildren([pageRoot]),
     );
   }

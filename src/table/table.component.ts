@@ -60,7 +60,7 @@ export class UniversalTable extends ZentComponent<IUniversalTable> implements IA
   }
 
   protected get dataSyntaxPath() {
-    return this.render.createStateAccessSyntax(this.tableStateName);
+    return this.render.component.createStateAccessSyntax(this.tableStateName);
   }
 
   protected get datasetName() {
@@ -82,7 +82,7 @@ export class UniversalTable extends ZentComponent<IUniversalTable> implements IA
   }
 
   private createChangeCallback() {
-    const axiosFn = this.render.createDirectiveRefAccess("HttpCall", "request-name");
+    const axiosFn = this.render.component.createDirectiveRefAccess("HttpCall", "request-name");
     const contextName = this.getState(BasicState.ContextInfo).name;
     const expression = this.helper.useComplexLogicExpression(
       {

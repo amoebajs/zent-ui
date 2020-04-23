@@ -38,8 +38,8 @@ export class UniversalFormSubmit extends ZentDirective<IUniversalFormState> {
   public formCancelText!: string;
 
   protected async onAttach() {
-    const refname = this.render.getRootState("formRefname");
-    const childset = this.render.getRootState("formFields");
+    const refname = this.render.component.getState("formRefname");
+    const childset = this.render.component.getState("formFields");
     const group = this.createNode("jsx-element")
       .setTagName(Utils.DOMS.Div)
       .addJsxAttrs({ key: `"${this.formSubmitGroupId.name}"` });

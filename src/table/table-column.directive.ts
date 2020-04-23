@@ -24,7 +24,7 @@ export class UniversalTableColumn extends ZentDirective<IUniversalTable> {
   public tcMode: TableColumnMode = TableColumnMode.Normal;
 
   protected async onAttach() {
-    const set = this.render.getRootState("tableColumns");
+    const set = this.render.component.getState("tableColumns");
     if (Utils.is.nullOrUndefined(this.tcTitle) || this.tcTitle === "") {
       throw new Error("[universal-table-column] table-column title cannot be empty.");
     }

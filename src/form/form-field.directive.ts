@@ -80,7 +80,7 @@ export class UniversalFormField extends ZentDirective<IUniversalFormState> {
   public formFieldOptions: Array<[string, string]> = [];
 
   protected async onAttach() {
-    const set = this.render.getRootState("formFields");
+    const set = this.render.component.getState("formFields");
     if (Utils.is.nullOrUndefined(this.formFieldName) || this.formFieldName === "") {
       throw new Error("[universal-form-field] form-field name cannot be empty.");
     }

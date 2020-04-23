@@ -65,7 +65,7 @@ export class UniversalForm extends ZentComponent<IUniversalFormState> implements
 
   public afterDirectivesAttach() {
     super.afterDirectivesAttach();
-    const set = this.render.getRootState("formFields");
+    const set = this.render.component.getState("formFields");
     const entries = Object.entries(set);
     for (const [key, entry] of entries) {
       this.addRenderChildren(key, <any>entry.element);

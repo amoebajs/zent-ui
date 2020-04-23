@@ -2,15 +2,15 @@
 # yarn lockfile v1
 
 
-"@amoebajs/basic-modules@^0.0.1-alpha.1585738052983":
-  version "0.0.1-alpha.1585738052983"
-  resolved "https://registry.npm.taobao.org/@amoebajs/basic-modules/download/@amoebajs/basic-modules-0.0.1-alpha.1585738052983.tgz#9c288bf563b924504af558f1d46492eef44d31a3"
-  integrity sha1-nCiL9WO5JFBK9Vjx1GSS7vRNMaM=
+"@amoebajs/basic-modules@^0.0.1-alpha.1587612441431":
+  version "0.0.1-alpha.1587612441431"
+  resolved "https://registry.npmjs.org/@amoebajs/basic-modules/-/basic-modules-0.0.1-alpha.1587612441431.tgz#46770b3db32cde8f17255814648dcc1ffb0e890e"
+  integrity sha512-OCFMuv1+TA//7fUT6qgmi1i0fbofU/+NGYLKW6EHYZ6nRpsLkd6EBvwp6UkASw1AYFAFOrjzklxEyg/4Jr2OlA==
 
-"@amoebajs/builder@^0.0.2-alpha.1585734024405":
-  version "0.0.2-alpha.1585734024405"
-  resolved "https://registry.npmjs.org/@amoebajs/builder/-/builder-0.0.2-alpha.1585734024405.tgz#f5b0c04770f6ec4d7f6ef77d2c5fe0942b8c7fc9"
-  integrity sha512-o+IzSbBI3YSrOeCh6KpLPurEo+NZPxldUU1dV3SbNKSDa6dBsxEn72PpswELcAwnAvWUSuewAyyy9jCX3bNplw==
+"@amoebajs/builder@^0.0.2-alpha.1587612406495":
+  version "0.0.2-alpha.1587612406495"
+  resolved "https://registry.npmjs.org/@amoebajs/builder/-/builder-0.0.2-alpha.1587612406495.tgz#c35903252419d887f37c899a82d138b55974129e"
+  integrity sha512-Ykph657rtNmPlaxL6WH8RbKRyci0474qYBacEehyWNEstib2VEaR/KcjGjUm8F6l0nyvtVveXVtbWSDrnGbJYQ==
   dependencies:
     "@bonbons/di" "2.0.0-beta.3"
     "@types/cheerio" "^0.22.15"

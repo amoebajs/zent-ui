@@ -30,7 +30,7 @@ export class ZentLoadingComponent extends ZentComponent implements IAfterInit {
 
   public afterChildrenRender() {
     super.afterChildrenRender();
-    this.addAttributeWithSyntaxText("loading", this.render.createStateAccessSyntax(this.stateName));
+    this.addAttributeWithSyntaxText("loading", this.render.component.createStateAccessSyntax(this.stateName));
   }
 
   protected onChildrenVisit(key: string) {
@@ -39,7 +39,7 @@ export class ZentLoadingComponent extends ZentComponent implements IAfterInit {
       return;
     }
     return {
-      newDisplayRule: this.render.createStateAccessSyntax(displayWith),
+      newDisplayRule: this.render.component.createStateAccessSyntax(displayWith),
     };
   }
 }
