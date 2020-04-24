@@ -35,17 +35,6 @@ page:
           - [left, 24px]
           - [right, 24px]
           - [top, 36px]
-  directives:
-    - ref: EntityState
-      id: EntityStateIns01
-      input:
-        name:
-          type: literal
-          expression: AppContext
-        state:
-          type: literal
-          expression:
-            - [tableData, {}]
   children:
     - ref: ZentTable
       id: Section01

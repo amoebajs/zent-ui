@@ -8,6 +8,8 @@ import {
   Utils,
   Input,
   BasicState,
+  Observable,
+  Observer,
 } from "@amoebajs/builder";
 import { HttpCallDirective } from "@amoebajs/basic-modules";
 import { ZentBaseCssDirective } from "../directives/base-css.directive";
@@ -21,10 +23,18 @@ import { ZentLoadingDirective } from "../loading/loading.directive";
   displayName: "通用表格",
   parent: ZentComponent,
 })
+@Require(ZentBaseCssDirective, { target: "button" })
+@Require(ZentBaseCssDirective, { target: "input" })
 @Require(ZentBaseCssDirective, { target: "grid" })
+@Require(ZentBaseCssDirective, { target: "notify" })
+@Require(ZentBaseCssDirective, { target: "pagination" })
 @Require(ZentComponentImportDirective, {
   target: "grid",
   alias: (i: UniversalTable) => i.tableRoot.name,
+})
+@Require(ZentComponentImportDirective, {
+  target: "notify",
+  alias: (i: UniversalTable) => i.tableNotify.name,
 })
 @Require(ZentLoadingDirective, "Loading", {
   expression: (i: UniversalTable) => i.tableLoading,
@@ -34,11 +44,20 @@ export class UniversalTable extends ZentComponent<IUniversalTable> implements IA
   @Reference("table")
   protected tableRoot!: VariableRef;
 
+  @Reference("table-notify")
+  protected tableNotify!: VariableRef;
+
   @Reference("table-data")
   protected tableDataVar!: VariableRef;
 
+  @Reference("table-observable")
+  protected tableObservableVar!: VariableRef;
+
   @Reference("table-columns")
   protected tableColumnsVar!: VariableRef;
+
+  @Reference("table-change-fn")
+  protected tableChangeFn!: VariableRef;
 
   @Reference("table-change-callback")
   protected tableChangeCallback!: VariableRef;
@@ -52,59 +71,95 @@ export class UniversalTable extends ZentComponent<IUniversalTable> implements IA
   @Input({ name: "fetchUrl", required: true })
   public tableFetchUrl!: string;
 
-  private _datasetName = "dataset";
-  private _paginationName = "pagination";
+  @Observable("table-data")
+  protected tableDataContext = Observer.Create({
+    loading: true,
+    dataset: [],
+    pagination: {
+      current: 0,
+      pageSize: 10,
+      total: 0,
+    },
+  });
 
   protected get tableLoading() {
-    return this.tableAutoLoading ? "!" + this.datasetName : false;
-  }
-
-  protected get dataSyntaxPath() {
-    return this.render.component.createStateAccessSyntax(this.tableStateName);
+    return this.tableAutoLoading ? this.tableDataVar.name + ".loading" : false;
   }
 
   protected get datasetName() {
-    return this.tableDataVar.name + "." + this._datasetName;
+    return this.tableDataVar.name + ".dataset";
   }
 
   protected get paginationName() {
-    return this.tableDataVar.name + "." + this._paginationName;
+    return this.tableDataVar.name + ".pagination";
+  }
+
+  protected get axiosFn() {
+    return this.render.component.createEntityRefAccess("HttpCall", "request-name");
+  }
+
+  protected get setStateFn() {
+    return this.getSetState(this.tableDataVar.name);
+  }
+
+  protected get currentState() {
+    return this.tableDataVar.name;
+  }
+
+  protected createUpdateState(payload: string | Record<string, any>) {
+    return `${this.setStateFn}({ ...${this.currentState}, ...(${
+      typeof payload === "string" ? payload : JSON.stringify(payload)
+    }) });`;
   }
 
   public afterInit() {
+    super.afterInit();
     this.setState("tableColumns", []);
     this.setTagName(this.tableRoot.name);
     this.addAttributeWithSyntaxText("columns", this.tableColumnsVar.name);
     this.addAttributeWithSyntaxText("datasets", this.datasetName);
+    this.addAttributeWithSyntaxText("pageInfo", this.paginationName);
     this.addAttributeWithSyntaxText("onChange", this.tableChangeCallback.name);
-    this.addUnshiftVariable(this.tableDataVar.name, this.helper.__engine.createIdentifier(this.dataSyntaxPath));
+    this.addUseState(this.tableDataVar.name, this.getNamedObserver(this.tableDataContext.name, "data"));
     this.createChangeCallback();
   }
 
   private createChangeCallback() {
-    const axiosFn = this.render.component.createDirectiveRefAccess("HttpCall", "request-name");
     const contextName = this.getState(BasicState.ContextInfo).name;
     const expression = this.helper.useComplexLogicExpression(
       {
-        type: "complexLogic",
-        expression: {
-          vars: [`setState is $(${this.tableStateName} | bind:setState)`],
-          expressions: [
-            "try {",
-            // `let promise = Promise.resolve({ items: [], pagination: { current: current + 1, pageSize, total: 200 } });`,
-            `const { items, pagination } = await ${axiosFn}({ url: \`${this.unionQueryWithFetchApi()}\`});`,
-            "console.log(items);",
-            "console.log(pagination);",
-            `setState({ dataset: items || [], pagination: { ...pagination } });`,
-            "} catch(error) { console.log(error); }",
-          ],
-        },
+        expressions: [
+          `
+          try {
+            current = current || ${this.currentState}.pagination.current || 1;
+            pageSize = pageSize || ${this.currentState}.pagination.pageSize || 10;
+            ${this.createUpdateState({ loading: true })}
+            // throw new Error("developing...");
+            // region: mock
+            // const list = [];
+            // for (let i = 0; i < pageSize; i++) {
+            //   list.push({ field01: "aaa" + i, field02: "bbb" + i, field03: current, field04: current * pageSize });
+            // }
+            // const { items, pagination } = await Promise.resolve({ items: list, pagination: { current: current, pageSize, total: 200 } });
+            // endregion
+            const { items, pagination } = await ${this.axiosFn}({ url: \`${this.unionQueryWithFetchApi()}\`});
+            console.log(items);
+            console.log(pagination);
+            ${this.createUpdateState("{ loading: false, dataset: items || [], pagination: { ...pagination } }")}
+          } catch (error) {
+            ${this.tableNotify.name}.error(String(error));
+          }
+          `,
+        ],
       },
       contextName,
     );
-    this.addUseCallback(this.tableChangeCallback.name, `async ({current, pageSize}: any) => { ${expression} }`, [
-      this.tableDataVar.name,
-    ]);
+    this.addUnshiftVariable(
+      this.tableChangeFn.name,
+      this.helper.createSyntaxExpression(`async ({ current, pageSize }: any) => { ${expression} }`),
+    );
+    this.addUseObservables(this.tableObservableVar.name, this.tableDataContext.name, this.tableChangeFn.name);
+    this.addUseCallback(this.tableChangeCallback.name, this.tableChangeFn.name, []);
   }
 
   private unionQueryWithFetchApi() {
