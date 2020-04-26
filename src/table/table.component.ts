@@ -111,17 +111,33 @@ export class UniversalTable extends ZentComponent<IUniversalTable> implements IA
 
   public afterInit() {
     super.afterInit();
-    this.setState("tableColumns", []);
+    this.createContext();
+    this.createRootElement();
+    this.createElementProps();
+    this.createObservables();
+    this.createOnChanged();
+  }
+
+  private createObservables() {
+    this.addUseState(this.tableDataVar.name, this.getNamedObserver(this.tableDataContext.name, "data"));
+  }
+
+  private createRootElement() {
     this.setTagName(this.tableRoot.name);
+  }
+
+  private createContext() {
+    this.setState("tableColumns", []);
+  }
+
+  private createElementProps() {
     this.addAttributeWithSyntaxText("columns", this.tableColumnsVar.name);
     this.addAttributeWithSyntaxText("datasets", this.datasetName);
     this.addAttributeWithSyntaxText("pageInfo", this.paginationName);
     this.addAttributeWithSyntaxText("onChange", this.tableChangeCallback.name);
-    this.addUseState(this.tableDataVar.name, this.getNamedObserver(this.tableDataContext.name, "data"));
-    this.createChangeCallback();
   }
 
-  private createChangeCallback() {
+  private createOnChanged() {
     const contextName = this.getState(BasicState.ContextInfo).name;
     const expression = this.helper.useComplexLogicExpression(
       {
