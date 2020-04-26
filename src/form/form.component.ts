@@ -53,9 +53,9 @@ export class UniversalForm extends ZentComponent<IUniversalFormState> implements
     this.setTagName(this.formRoot.name);
     this.setState("formFields", {});
     this.setState("formRefname", this.formRefname.name);
-    this.addAttributeWithSyntaxText("form", this.formRefname.name);
+    this.addAttributeWithSyntaxText("form", this.formRefname);
     this.addAttributeWithSyntaxText("layout", `"${this.formDirection}"`);
-    this.addUnshiftVariable(this.formRefname.name, this.createRefExpression());
+    this.addUnshiftVariable(this.formRefname, this.createRefExpression());
   }
 
   private createRefExpression() {

@@ -129,10 +129,10 @@ export class UniversalTable extends ZentComponent<IUniversalTable> implements IA
   }
 
   private createElementProps() {
-    this.addAttributeWithSyntaxText("columns", this.tableColumnsVar.name);
+    this.addAttributeWithSyntaxText("columns", this.tableColumnsVar);
     this.addAttributeWithSyntaxText("datasets", this.datasetName);
     this.addAttributeWithSyntaxText("pageInfo", this.paginationName);
-    this.addAttributeWithSyntaxText("onChange", this.tableChangeCallback.name);
+    this.addAttributeWithSyntaxText("onChange", this.tableChangeCallback);
   }
 
   private createOnChanged() {
@@ -166,11 +166,11 @@ export class UniversalTable extends ZentComponent<IUniversalTable> implements IA
       contextName,
     );
     this.addUnshiftVariable(
-      this.tableChangeFn.name,
+      this.tableChangeFn,
       this.helper.createSyntaxExpression(`async ({ current, pageSize }: any) => { ${expression} }`),
     );
-    this.addUseObservables(this.tableDataContext.name, this.tableChangeFn.name);
-    this.addUseCallback(this.tableChangeCallback.name, this.tableChangeFn.name, []);
+    this.addUseObservables(this.tableDataContext, this.tableChangeFn.name);
+    this.addUseCallback(this.tableChangeCallback, this.tableChangeFn.name, []);
   }
 
   private unionQueryWithFetchApi() {
