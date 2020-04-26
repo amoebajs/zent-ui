@@ -44,22 +44,19 @@ export class UniversalTable extends ZentComponent<IUniversalTable> implements IA
   @Reference("table")
   protected tableRoot!: VariableRef;
 
-  @Reference("table-notify")
+  @Reference("notify")
   protected tableNotify!: VariableRef;
 
-  @Reference("table-data")
+  @Reference("data")
   protected tableDataVar!: VariableRef;
 
-  @Reference("table-observable")
-  protected tableObservableVar!: VariableRef;
-
-  @Reference("table-columns")
+  @Reference("columns")
   protected tableColumnsVar!: VariableRef;
 
-  @Reference("table-change-fn")
+  @Reference("change-fn")
   protected tableChangeFn!: VariableRef;
 
-  @Reference("table-change-callback")
+  @Reference("change-cb")
   protected tableChangeCallback!: VariableRef;
 
   @Input({ name: "autoLoading" })
@@ -71,7 +68,7 @@ export class UniversalTable extends ZentComponent<IUniversalTable> implements IA
   @Input({ name: "fetchUrl", required: true })
   public tableFetchUrl!: string;
 
-  @Observable("table-data")
+  @Observable("data-effect")
   protected tableDataContext = Observer.Create({
     loading: true,
     dataset: [],
@@ -158,7 +155,7 @@ export class UniversalTable extends ZentComponent<IUniversalTable> implements IA
       this.tableChangeFn.name,
       this.helper.createSyntaxExpression(`async ({ current, pageSize }: any) => { ${expression} }`),
     );
-    this.addUseObservables(this.tableObservableVar.name, this.tableDataContext.name, this.tableChangeFn.name);
+    this.addUseObservables(this.tableDataContext.name, this.tableChangeFn.name);
     this.addUseCallback(this.tableChangeCallback.name, this.tableChangeFn.name, []);
   }
 
