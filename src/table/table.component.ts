@@ -12,7 +12,7 @@ import {
   Observer,
 } from "@amoebajs/builder";
 import { HttpCallDirective } from "@amoebajs/basic-modules";
-import { ZentBaseCssDirective } from "../directives/base-css.directive";
+import { ZentCssImportDirective } from "../directives/base-css.directive";
 import { ZentComponent } from "../base/base.component";
 import { ZentComponentImportDirective } from "../directives/base-import.directive";
 import { IUniversalTable, IUniversalTableColumn, TableColumnMode } from "./typing";
@@ -20,14 +20,12 @@ import { ZentLoadingDirective } from "../loading/loading.directive";
 
 @Component({
   name: "universal-table",
-  displayName: "通用表格",
+  displayName: "表格",
   parent: ZentComponent,
 })
-@Require(ZentBaseCssDirective, { target: "button" })
-@Require(ZentBaseCssDirective, { target: "input" })
-@Require(ZentBaseCssDirective, { target: "grid" })
-@Require(ZentBaseCssDirective, { target: "notify" })
-@Require(ZentBaseCssDirective, { target: "pagination" })
+@Require(ZentCssImportDirective, {
+  target: ["button", "input", "grid", "notify", "pagination"],
+})
 @Require(ZentComponentImportDirective, {
   target: "grid",
   alias: (i: UniversalTable) => i.tableRoot.name,

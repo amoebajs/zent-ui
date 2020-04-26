@@ -26,7 +26,7 @@ export interface IUniversalFormField {
 
 @Directive({
   name: "universal-form-field",
-  displayName: "通用表单字段",
+  displayName: "表单字段",
   parent: ZentDirective,
 })
 export class UniversalFormField extends ZentDirective<IUniversalFormState> {

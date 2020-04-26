@@ -11,14 +11,6 @@ components:
     module: zent-module
     version: 0.0.1-beta.0
 directives:
-  - id: EntityState
-    name: entity-state
-    module: ambjs-common-module
-    version: 0.0.1-beta.0
-  - id: HttpCall
-    name: http-call
-    module: ambjs-common-module
-    version: 0.0.1-beta.0
   - id: ZentTableColumn
     name: universal-table-column
     module: zent-module

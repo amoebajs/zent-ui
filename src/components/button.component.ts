@@ -1,5 +1,5 @@
 import { Component, Input, Require, Reference, VariableRef } from "@amoebajs/builder";
-import { ZentBaseCssDirective } from "../directives/base-css.directive";
+import { ZentCssImportDirective } from "../directives/base-css.directive";
 import { ZentComponentImportDirective } from "../directives/base-import.directive";
 import { ZentComponent } from "../base/base.component";
 
@@ -22,9 +22,16 @@ export enum ZentButtonHtmlType {
   Reset = "reset",
 }
 
-@Component({ name: "button", displayName: "按钮", parent: ZentComponent })
-@Require(ZentComponentImportDirective, { target: "button", alias: ({ comp }: any) => comp.name })
-@Require(ZentBaseCssDirective, { target: "button" })
+@Component({
+  name: "button",
+  displayName: "按钮",
+  parent: ZentComponent,
+})
+@Require(ZentCssImportDirective, { target: "button" })
+@Require(ZentComponentImportDirective, {
+  target: "button",
+  alias: ({ comp }: any) => comp.name,
+})
 export class ZentButtonComponent extends ZentComponent {
   @Input({ name: "className", useEnums: v => typeof v === "string" })
   ztClassName: string[] = [];

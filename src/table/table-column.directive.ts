@@ -4,7 +4,7 @@ import { IUniversalTable, TableColumnMode } from "./typing";
 
 @Directive({
   name: "universal-table-column",
-  displayName: "通用表格列",
+  displayName: "表格列",
   parent: ZentDirective,
 })
 export class UniversalTableColumn extends ZentDirective<IUniversalTable> {

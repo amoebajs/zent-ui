@@ -8,7 +8,7 @@ import {
   IAfterDirectivesAttach,
   Utils,
 } from "@amoebajs/builder";
-import { ZentBaseCssDirective } from "../directives/base-css.directive";
+import { ZentCssImportDirective } from "../directives/base-css.directive";
 import { ZentComponent } from "../base/base.component";
 import { ZentComponentImportDirective } from "../directives/base-import.directive";
 import { IUniversalFormField } from "./form-field.directive";
@@ -25,10 +25,10 @@ export enum FormDirection {
 
 @Component({
   name: "universal-form",
-  displayName: "通用表单",
+  displayName: "表单",
   parent: ZentComponent,
 })
-@Require(ZentBaseCssDirective, { target: "form" })
+@Require(ZentCssImportDirective, { target: "form" })
 @Require(ZentComponentImportDirective, {
   target: "form",
   named: ({ formStrategy, formRoot }: UniversalForm) => ({

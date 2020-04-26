@@ -1,10 +1,10 @@
 import { Component, ReactComponent, Require, Utils } from "@amoebajs/builder";
-import { ZentBaseCssDirective } from "../directives/base-css.directive";
+import { ZentCssImportDirective } from "../directives/base-css.directive";
 
 export type IDecide = "||" | "??";
 
 @Component({ name: "component-base", displayName: "Zent基础组件" })
-@Require(ZentBaseCssDirective, { target: "base" })
+@Require(ZentCssImportDirective, { target: "base" })
 export class ZentComponent<T extends Record<string, any> = {}> extends ReactComponent<T> {
   protected useStringProp(prop: string, input: string[] | string | boolean, decide: IDecide = "||"): string {
     let value = "";

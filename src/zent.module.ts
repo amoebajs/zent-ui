@@ -1,7 +1,7 @@
 import { Module } from "@amoebajs/builder";
 import { ZentComponent } from "./base/base.component";
 import { ZentDirective } from "./base/base.directive";
-import { ZentBaseCssDirective } from "./directives/base-css.directive";
+import { ZentCssImportDirective } from "./directives/base-css.directive";
 import { ZentButtonComponent } from "./components/button.component";
 import { ZentComponentImportDirective } from "./directives/base-import.directive";
 import { ZentLoadingComponent } from "./loading/block-loading.component";
@@ -18,7 +18,7 @@ import { UniversalTableColumn } from "./table/table-column.directive";
   provider: "react",
   components: [ZentButtonComponent, ZentLoadingComponent, UniversalForm, UniversalTable],
   directives: [
-    ZentBaseCssDirective,
+    ZentCssImportDirective,
     ZentComponentImportDirective,
     ZentLoadingDirective,
     UniversalFormField,
@@ -40,7 +40,7 @@ export {
   ZentLoadingComponent,
   UniversalForm,
   UniversalTable,
-  ZentBaseCssDirective,
+  ZentCssImportDirective as ZentCssDirective,
   ZentComponentImportDirective,
   ZentLoadingDirective,
   UniversalFormField,

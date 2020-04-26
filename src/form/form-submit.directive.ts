@@ -9,7 +9,7 @@ export enum FormSubmitType {
 
 @Directive({
   name: "universal-form-submit",
-  displayName: "通用表单提交",
+  displayName: "表单提交",
   parent: ZentDirective,
 })
 export class UniversalFormSubmit extends ZentDirective<IUniversalFormState> {

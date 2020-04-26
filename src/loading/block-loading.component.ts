@@ -1,11 +1,15 @@
 import { Component, Require, Input, Attach, PropAttach, IAfterInit, Reference, VariableRef } from "@amoebajs/builder";
 import { EntityStateDirective } from "@amoebajs/basic-modules";
 import { ZentComponentImportDirective } from "../directives/base-import.directive";
-import { ZentBaseCssDirective } from "../directives/base-css.directive";
+import { ZentCssImportDirective } from "../directives/base-css.directive";
 import { ZentComponent } from "../base/base.component";
 
-@Component({ name: "loading", displayName: "全局Loading", parent: ZentComponent })
-@Require(ZentBaseCssDirective, { target: "loading" })
+@Component({
+  name: "loading",
+  displayName: "加载布局",
+  parent: ZentComponent,
+})
+@Require(ZentCssImportDirective, { target: "loading" })
 @Require(ZentComponentImportDirective, {
   target: "loading/block-loading",
   alias: ({ formElement }: ZentLoadingComponent) => formElement.name,

@@ -3,7 +3,7 @@ import { ZentDirective } from "../base/base.directive";
 
 @Directive({
   name: "loading",
-  displayName: "Loading指令",
+  displayName: "加载",
   parent: ZentDirective,
 })
 export class ZentLoadingDirective extends ZentDirective {

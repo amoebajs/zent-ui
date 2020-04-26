@@ -3,7 +3,7 @@ import { ZentDirective } from "../base/base.directive";
 
 @Directive({
   name: "component-import",
-  displayName: "组件导入指令",
+  displayName: "组件导入",
   parent: ZentDirective,
 })
 export class ZentComponentImportDirective extends ZentDirective {

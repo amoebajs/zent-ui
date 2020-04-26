@@ -1,20 +1,25 @@
-import { Directive, Input } from "@amoebajs/builder";
+import { Directive, Input, Utils } from "@amoebajs/builder";
 import { ZentDirective } from "../base/base.directive";
 
 @Directive({
-  name: "base-css",
-  displayName: "基础样式指令",
+  name: "css-import",
+  displayName: "样式导入",
   parent: ZentDirective,
 })
-export class ZentBaseCssDirective extends ZentDirective {
+export class ZentCssImportDirective extends ZentDirective {
   @Input()
-  public target: string = "base";
+  public target: string | string[] = "base";
 
   protected async onAttach() {
     try {
-      this.addImports([this.createNode("import").setModulePath(`zent/css/${this.target}.css`)]);
-      if (this.target !== "base") {
-        this.addImports([this.createNode("import").setModulePath(`zent/css/base.css`)]);
+      if (!Utils.is.array(this.target)) {
+        this.target = [this.target].filter(i => !!i);
+      }
+      if (!this.target.includes("base")) {
+        this.target.unshift("base");
+      }
+      for (const each of this.target) {
+        this.addImports([this.createNode("import").setModulePath(`zent/css/${each}.css`)]);
       }
     } catch (error) {
       /** ignore */
