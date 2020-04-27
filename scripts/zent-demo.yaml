@@ -42,19 +42,19 @@ page:
     grid:
       rowCount:
         type: literal
-        expression: 1
+        expression: 2
       columnCount:
         type: literal
-        expression: 2
+        expression: 1
       rowSizes:
-        type: literal
-        expression:
-          - [1, 100]
-      columnSizes:
         type: literal
         expression:
           - [1, 50]
           - [2, 50]
+      columnSizes:
+        type: literal
+        expression:
+          - [1, 100]
   children:
     - ref: ZentForm
       id: Section02
@@ -258,7 +258,7 @@ page:
               type: literal
               expression: 字段05
   attach:
-    columnStart:
+    rowStart:
       type: childRefs
       expression:
         - id: Section01
