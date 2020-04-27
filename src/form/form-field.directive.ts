@@ -19,9 +19,15 @@ export enum FormFieldType {
   Checkbox = "checkbox",
 }
 
+export interface IGenerateExtends {
+  style?: Record<string, any>;
+}
+
 export interface IUniversalFormField {
   id: VariableRef;
-  element: JsxElementGenerator | JsxExpressionGenerator;
+  type: "submit" | "field";
+  extends: IGenerateExtends;
+  generate: (ext?: IGenerateExtends) => JsxElementGenerator | JsxExpressionGenerator;
 }
 
 @Directive({
@@ -84,126 +90,144 @@ export class UniversalFormField extends ZentDirective<IUniversalFormState> {
     if (Utils.is.nullOrUndefined(this.formFieldName) || this.formFieldName === "") {
       throw new Error("[universal-form-field] form-field name cannot be empty.");
     }
-    const newChild: IUniversalFormField = (set[this.formFieldUniqueId.name] = {
+    set[this.formFieldUniqueId.name] = {
       id: this.formFieldUniqueId,
-      element: null as any,
-    });
-    const element = this.createNode("jsx-element")
-      .addJsxAttr("key", `"${this.formFieldUniqueId.name}"`)
-      .addJsxAttr("name", `"${this.formFieldName}"`)
-      .addJsxAttr("label", `"${this.formFieldLabel ?? this.formFieldName}"`)
-      .addJsxAttr("required", `${this.formFieldRequired ?? false}`);
-    this.decideGeneration(this.formFieldType, element);
-    newChild.element = element;
+      type: "field",
+      extends: {},
+      generate: this.decideGeneration(
+        this.formFieldType,
+        this.createNode("jsx-element")
+          .addJsxAttr("key", `"${this.formFieldUniqueId.name}"`)
+          .addJsxAttr("name", `"${this.formFieldName}"`)
+          .addJsxAttr("label", `"${this.formFieldLabel ?? this.formFieldName}"`)
+          .addJsxAttr("required", `${this.formFieldRequired ?? false}`),
+      ),
+    };
   }
 
   private decideGeneration(fieldType: FormFieldType, element: JsxElementGenerator) {
     switch (fieldType) {
       case FormFieldType.Text:
-        this.prepareForText(element);
         this.importFormField(element, "FormInputField", this.formFieldTextInput);
-        break;
+        return this.prepareForText(element);
       case FormFieldType.Textarea:
-        this.prepareForTextarea(element);
         this.importFormField(element, "FormInputField", this.formFieldTextareaInput);
-        break;
+        return this.prepareForTextarea(element);
       case FormFieldType.Number:
-        this.prepareForNumber(element);
         this.importFormField(element, "FormNumberInputField", this.formFieldNumberInput);
-        break;
+        return this.prepareForNumber(element);
       case FormFieldType.Checkbox:
-        this.prepareForCheckbox(element);
         this.importFormField(element, "FormCheckboxGroupField", this.formFieldCheckboxGroup);
-        break;
+        return this.prepareForCheckbox(element);
       case FormFieldType.Select:
-        this.prepareForSelect(element);
         this.importFormField(element, "FormSelectField", this.formFieldSelect);
-        break;
+        return this.prepareForSelect(element);
       case FormFieldType.Switch:
-        this.prepareForSwitch(element);
         this.importFormField(element, "FormSwitchField", this.formFieldSwitch);
-        break;
+        return this.prepareForSwitch(element);
       default:
-        break;
+        return () => element;
     }
   }
 
-  private prepareForTextarea(element: JsxElementGenerator) {
-    this.prepareForText(element, { type: "textarea" });
+  private useGenExtends(
+    element: JsxElementGenerator,
+    transform: (e: JsxElementGenerator) => JsxElementGenerator | JsxExpressionGenerator,
+  ) {
+    return ({ style }: IGenerateExtends = {}) => {
+      if (style) {
+        element.addJsxAttr("style", JSON.stringify(style));
+      }
+      return transform(element);
+    };
   }
 
-  private prepareForText(element: JsxElementGenerator, props: Record<string, any> = {}) {
-    element
-      .setTagName(this.formFieldTextInput.name)
-      .addJsxAttr(
-        "props",
-        JSON.stringify({
-          ...props,
-          placeholder: this.formFieldPlaceholder ?? "",
-          style: { width: "300px" },
-        }),
-      )
-      .addJsxAttr("defaultValue", `"${this.formFieldDefaultValue ?? ""}"`);
+  private prepareForTextarea(element: JsxElementGenerator) {
+    return this.prepareForText(element, this.formFieldTextareaInput, { type: "textarea" });
+  }
+
+  private prepareForText(element: JsxElementGenerator, ref = this.formFieldTextInput, props: Record<string, any> = {}) {
+    return this.useGenExtends(element, element =>
+      element
+        .setTagName(ref.name)
+        .addJsxAttr(
+          "props",
+          JSON.stringify({
+            ...props,
+            placeholder: this.formFieldPlaceholder ?? "",
+            style: { width: "300px" },
+          }),
+        )
+        .addJsxAttr("defaultValue", `"${this.formFieldDefaultValue ?? ""}"`),
+    );
   }
 
   private prepareForSwitch(element: JsxElementGenerator) {
-    element
-      .setTagName(this.formFieldSwitch.name)
-      .addJsxAttr("defaultValue", `${String(this.formFieldDefaultValue) === "true"}`);
+    return this.useGenExtends(element, element =>
+      element
+        .setTagName(this.formFieldSwitch.name)
+        .addJsxAttr("defaultValue", `${String(this.formFieldDefaultValue) === "true"}`),
+    );
   }
 
   private prepareForNumber(element: JsxElementGenerator, props: Record<string, any> = {}) {
-    element
-      .setTagName(this.formFieldNumberInput.name)
-      .addJsxAttr(
-        "props",
-        JSON.stringify({
-          ...props,
-          placeholder: this.formFieldPlaceholder ?? "",
-          style: { width: "300px" },
-        }),
-      )
-      .addJsxAttr("defaultValue", `${this.formFieldDefaultValue ?? 0}`);
+    return this.useGenExtends(element, element =>
+      element
+        .setTagName(this.formFieldNumberInput.name)
+        .addJsxAttr(
+          "props",
+          JSON.stringify({
+            ...props,
+            placeholder: this.formFieldPlaceholder ?? "",
+            style: { width: "300px" },
+          }),
+        )
+        .addJsxAttr("defaultValue", `${this.formFieldDefaultValue ?? 0}`),
+    );
   }
 
   private prepareForCheckbox(element: JsxElementGenerator, props: Record<string, any> = {}) {
-    const values = Utils.is.array(this.formFieldDefaultValue)
-      ? this.formFieldDefaultValue
-      : [this.formFieldDefaultValue];
-    element
-      .setTagName(this.formFieldCheckboxGroup.name)
-      .addJsxAttr("props", JSON.stringify(props))
-      .addJsxChildren(
-        this.formFieldOptions.map(([k, v]) =>
-          this.createNode("jsx-element")
-            .setTagName(this.formFieldCheckbox.name)
-            .addJsxAttrs({
-              value: `"${v}"`,
-            })
-            .addJsxChild(k),
-        ),
-      )
-      .addJsxAttr(
-        "defaultValue",
-        `[${values
-          .filter(e => this.formFieldOptions.findIndex(b => b[1] === e) >= 0)
-          .map(i => `"${i}"`)
-          .join(", ")}]`,
-      );
+    return this.useGenExtends(element, element => {
+      const values = Utils.is.array(this.formFieldDefaultValue)
+        ? this.formFieldDefaultValue
+        : [this.formFieldDefaultValue];
+      return element
+        .setTagName(this.formFieldCheckboxGroup.name)
+        .addJsxAttr("props", JSON.stringify(props))
+        .addJsxChildren(
+          this.formFieldOptions.map(([k, v]) =>
+            this.createNode("jsx-element")
+              .setTagName(this.formFieldCheckbox.name)
+              .addJsxAttrs({
+                value: `"${v}"`,
+              })
+              .addJsxChild(k),
+          ),
+        )
+        .addJsxAttr(
+          "defaultValue",
+          `[${values
+            .filter(e => this.formFieldOptions.findIndex(b => b[1] === e) >= 0)
+            .map(i => `"${i}"`)
+            .join(", ")}]`,
+        );
+    });
   }
 
   private prepareForSelect(element: JsxElementGenerator, props: Record<string, any> = {}) {
-    element
-      .setTagName(this.formFieldSelect.name)
-      .addJsxAttr(
-        "props",
-        JSON.stringify({
-          ...props,
-          placeholder: this.formFieldPlaceholder ?? "",
-          data: this.formFieldOptions.map(([k, v]) => ({ text: k, value: v })),
-        }),
-      )
-      .addJsxAttr("defaultValue", `"${this.formFieldDefaultValue}"`);
+    return this.useGenExtends(element, element =>
+      element
+        .setTagName(this.formFieldSelect.name)
+        .addJsxAttr(
+          "props",
+          JSON.stringify({
+            ...props,
+            placeholder: this.formFieldPlaceholder ?? "",
+            data: this.formFieldOptions.map(([k, v]) => ({ text: k, value: v })),
+          }),
+        )
+        .addJsxAttr("defaultValue", `"${this.formFieldDefaultValue}"`),
+    );
   }
 
   private importFormField(element: JsxElementGenerator, name: string, id: VariableRef) {

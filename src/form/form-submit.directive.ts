@@ -43,14 +43,16 @@ export class UniversalFormSubmit extends ZentDirective<IUniversalFormState> {
     const group = this.createNode("jsx-element")
       .setTagName(Utils.DOMS.Div)
       .addJsxAttrs({ key: `"${this.formSubmitGroupId.name}"` });
-    group.addJsxAttr("style", JSON.stringify({ paddingLeft: "60px" }));
+    group.addJsxAttr("style", JSON.stringify({ paddingTop: "24px", paddingLeft: "60px" }));
     group.addJsxChild(this.createConfirm(refname));
     if (this.formShowCancel) {
       group.addJsxChild(this.createCancel());
     }
     childset[this.formSubmitGroupId.name] = {
       id: this.formSubmitGroupId,
-      element: group,
+      type: "submit",
+      extends: {},
+      generate: () => group,
     };
     this.addImports([
       this.helper.createImport("zent/es/button", this.formSubmitButton.name),

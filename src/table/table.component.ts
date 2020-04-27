@@ -147,13 +147,13 @@ export class UniversalTable extends ZentComponent<IUniversalTable> implements IA
             ${this.createUpdateState({ loading: true })}
             // throw new Error("developing...");
             // region: mock
-            // const list = [];
-            // for (let i = 0; i < pageSize; i++) {
-            //   list.push({ field01: "aaa" + i, field02: "bbb" + i, field03: current, field04: current * pageSize });
-            // }
-            // const { items, pagination } = await Promise.resolve({ items: list, pagination: { current: current, pageSize, total: 200 } });
+            const list = [];
+            for (let i = 0; i < pageSize; i++) {
+              list.push({ field01: "aaa" + i, field02: "bbb" + i, field03: current, field04: current * pageSize });
+            }
+            const { items, pagination } = await Promise.resolve({ items: list, pagination: { current: current, pageSize, total: 200 } });
             // endregion
-            const { items, pagination } = await ${this.axiosFn}({ url: \`${this.unionQueryWithFetchApi()}\`});
+            // const { items, pagination } = await ${this.axiosFn}({ url: \`${this.unionQueryWithFetchApi()}\`});
             console.log(items);
             console.log(pagination);
             ${this.createUpdateState("{ loading: false, dataset: items || [], pagination: { ...pagination } }")}

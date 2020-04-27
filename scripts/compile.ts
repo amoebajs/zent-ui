@@ -10,15 +10,18 @@ if (process.env.ENV_MODE === "watch") {
   require("./watch-config");
 }
 
-const openfile = process.argv.find(i => i.startsWith("--open=")) || "--open=layout.yaml";
+let openfile = process.argv.find(i => i.startsWith("--open=")) || "--open=layout.yaml";
 const format = process.argv.find(i => i.startsWith("--format=")) || "--format=false";
 const filemode = process.argv.find(i => i.startsWith("--mode=")) || "--mode=ts";
-
-const demoConf = jsyaml.load(
-  fs
-    .readFileSync(path.resolve(__dirname, (openfile.endsWith(".yaml") ? openfile : openfile + ".yaml").slice(7)))
-    .toString(),
-);
+let yamlExt = openfile.endsWith(".yaml");
+const jsonExt = openfile.endsWith(".json");
+if (!jsonExt && !yamlExt) {
+  yamlExt = true;
+  openfile += ".yaml";
+}
+const filepath = path.resolve(__dirname, openfile.slice(7));
+const filecontent = fs.readFileSync(filepath).toString();
+const demoConf = jsonExt ? JSON.parse(filecontent) : jsyaml.load(filecontent);
 
 const buildFolder = path.resolve(process.cwd(), "build");
 

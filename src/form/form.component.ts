@@ -36,7 +36,8 @@ export enum FormDirection {
     FormStrategy: formStrategy.name,
   }),
 })
-export class UniversalForm extends ZentComponent<IUniversalFormState> implements IAfterInit, IAfterDirectivesAttach {
+export class UniversalForm<T extends IUniversalFormState = IUniversalFormState> extends ZentComponent<T>
+  implements IAfterInit, IAfterDirectivesAttach {
   @Reference("form")
   protected formRoot!: VariableRef;
 
@@ -55,6 +56,7 @@ export class UniversalForm extends ZentComponent<IUniversalFormState> implements
     this.setState("formRefname", this.formRefname.name);
     this.addAttributeWithSyntaxText("form", this.formRefname);
     this.addAttributeWithSyntaxText("layout", `"${this.formDirection}"`);
+    this.addAttributeWithSyntaxText("style", JSON.stringify(this.getFormStyles()));
     this.addUnshiftVariable(this.formRefname, this.createRefExpression());
   }
 
@@ -65,10 +67,17 @@ export class UniversalForm extends ZentComponent<IUniversalFormState> implements
 
   public afterDirectivesAttach() {
     super.afterDirectivesAttach();
-    const set = this.render.component.getState("formFields");
+    this.beforeFormChildrenToRender(this.render.component.getState("formFields"));
+  }
+
+  protected getFormStyles(): Record<string, any> {
+    return {};
+  }
+
+  protected beforeFormChildrenToRender(set: T["formFields"]) {
     const entries = Object.entries(set);
     for (const [key, entry] of entries) {
-      this.addRenderChildren(key, <any>entry.element);
+      this.addRenderChildren(key, <any>entry.generate(entry.extends));
     }
   }
 }

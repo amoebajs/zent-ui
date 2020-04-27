@@ -33,5 +33,5 @@ function fn(files) {
   runWatchEventTrick();
 }
 
-watcher = chokidar.watch(resolvePaths(["scripts/*.yaml"]));
+watcher = chokidar.watch(resolvePaths(["scripts/*.yaml", "scripts/*.json"]));
 watcher.addListener("change", fn);

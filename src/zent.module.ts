@@ -11,12 +11,21 @@ import { UniversalFormField } from "./form/form-field.directive";
 import { UniversalFormSubmit } from "./form/form-submit.directive";
 import { UniversalTable } from "./table/table.component";
 import { UniversalTableColumn } from "./table/table-column.directive";
+import { FilterBoardComponent } from "./filter/filter.component";
+import { TitleComponent } from "./title/title.component";
 
 @Module({
   name: "zent-module",
   displayName: "Zent模块",
   provider: "react",
-  components: [ZentButtonComponent, ZentLoadingComponent, UniversalForm, UniversalTable],
+  components: [
+    ZentButtonComponent,
+    ZentLoadingComponent,
+    UniversalForm,
+    UniversalTable,
+    FilterBoardComponent,
+    TitleComponent,
+  ],
   directives: [
     ZentCssImportDirective,
     ZentComponentImportDirective,
@@ -40,10 +49,12 @@ export {
   ZentLoadingComponent,
   UniversalForm,
   UniversalTable,
-  ZentCssImportDirective as ZentCssDirective,
+  FilterBoardComponent,
+  ZentCssImportDirective,
   ZentComponentImportDirective,
   ZentLoadingDirective,
   UniversalFormField,
   UniversalFormSubmit,
   UniversalTableColumn,
+  TitleComponent,
 };
