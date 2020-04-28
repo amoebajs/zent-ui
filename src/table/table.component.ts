@@ -37,7 +37,7 @@ import { ZentLoadingDirective } from "../loading/loading.directive";
 @Require(ZentLoadingDirective, "Loading", {
   expression: (i: UniversalTable) => i.tableLoading,
 })
-@Require(HttpCallDirective, "AJAX")
+@Require(HttpCallDirective, "Ajax")
 export class UniversalTable extends ZentComponent<IUniversalTable> implements IAfterInit, IAfterDirectivesAttach {
   @Reference("table")
   protected _table!: VariableRef;
