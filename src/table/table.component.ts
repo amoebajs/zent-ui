@@ -28,34 +28,34 @@ import { ZentLoadingDirective } from "../loading/loading.directive";
 })
 @Require(ZentComponentImportDirective, {
   target: "grid",
-  alias: (i: UniversalTable) => i.tableRoot.name,
+  alias: (i: UniversalTable) => i._table.name,
 })
 @Require(ZentComponentImportDirective, {
   target: "notify",
-  alias: (i: UniversalTable) => i.tableNotify.name,
+  alias: (i: UniversalTable) => i._notify.name,
 })
 @Require(ZentLoadingDirective, "Loading", {
   expression: (i: UniversalTable) => i.tableLoading,
 })
-@Require(HttpCallDirective, "HttpCall")
+@Require(HttpCallDirective, "AJAX")
 export class UniversalTable extends ZentComponent<IUniversalTable> implements IAfterInit, IAfterDirectivesAttach {
   @Reference("table")
-  protected tableRoot!: VariableRef;
+  protected _table!: VariableRef;
 
   @Reference("notify")
-  protected tableNotify!: VariableRef;
+  protected _notify!: VariableRef;
 
   @Reference("data")
-  protected tableDataVar!: VariableRef;
+  protected _data!: VariableRef;
 
   @Reference("columns")
-  protected tableColumnsVar!: VariableRef;
+  protected _columns!: VariableRef;
 
   @Reference("change-fn")
-  protected tableChangeFn!: VariableRef;
+  protected _change_fn!: VariableRef;
 
   @Reference("change-cb")
-  protected tableChangeCallback!: VariableRef;
+  protected _change_cb!: VariableRef;
 
   @Input({ name: "autoLoading" })
   public tableAutoLoading: boolean = true;
@@ -66,10 +66,14 @@ export class UniversalTable extends ZentComponent<IUniversalTable> implements IA
   @Input({ name: "fetchUrl", required: true })
   public tableFetchUrl!: string;
 
-  @Observable("data-effect")
-  protected tableDataContext = Observer.Create({
+  @Input({ name: "rowKey" })
+  public tableRowKey?: string;
+
+  @Observable("effect")
+  protected $effect = Observer.Create({
     loading: true,
     dataset: [],
+    filters: {},
     pagination: {
       current: 0,
       pageSize: 10,
@@ -77,32 +81,32 @@ export class UniversalTable extends ZentComponent<IUniversalTable> implements IA
     },
   });
 
+  protected get dataCurrent() {
+    return this._data.name;
+  }
+
   protected get tableLoading() {
-    return this.tableAutoLoading ? this.tableDataVar.name + ".loading" : false;
+    return this.tableAutoLoading ? this.dataCurrent + ".loading" : false;
   }
 
   protected get datasetName() {
-    return this.tableDataVar.name + ".dataset";
+    return this.dataCurrent + ".dataset";
   }
 
   protected get paginationName() {
-    return this.tableDataVar.name + ".pagination";
+    return this.dataCurrent + ".pagination";
   }
 
   protected get axiosFn() {
-    return this.render.component.createEntityRefAccess("HttpCall", "request-name");
+    return this.render.component.createEntityRefAccess("AJAX", "request-name");
   }
 
   protected get setStateFn() {
-    return this.getSetState(this.tableDataVar.name);
-  }
-
-  protected get currentState() {
-    return this.tableDataVar.name;
+    return this.getSetState(this._data.name);
   }
 
   protected createUpdateState(payload: string | Record<string, any>) {
-    return `${this.setStateFn}({ ...${this.currentState}, ...(${
+    return `${this.setStateFn}({ ...${this.dataCurrent}, ...(${
       typeof payload === "string" ? payload : JSON.stringify(payload)
     }) });`;
   }
@@ -117,11 +121,12 @@ export class UniversalTable extends ZentComponent<IUniversalTable> implements IA
   }
 
   private createObservables() {
-    this.addUseState(this.tableDataVar.name, this.getNamedObserver(this.tableDataContext.name, "data"));
+    this.addUseState(this._data.name, this.getNamedObserver(this.$effect.name, "data"));
+    // this.addUseRef(this.tableDataVar, this.getNamedObserver(this.tableDataContext.name, "data"));
   }
 
   private createRootElement() {
-    this.setTagName(this.tableRoot.name);
+    this.setTagName(this._table.name);
   }
 
   private createContext() {
@@ -129,10 +134,10 @@ export class UniversalTable extends ZentComponent<IUniversalTable> implements IA
   }
 
   private createElementProps() {
-    this.addAttributeWithSyntaxText("columns", this.tableColumnsVar);
+    this.addAttributeWithSyntaxText("columns", this._columns);
     this.addAttributeWithSyntaxText("datasets", this.datasetName);
     this.addAttributeWithSyntaxText("pageInfo", this.paginationName);
-    this.addAttributeWithSyntaxText("onChange", this.tableChangeCallback);
+    this.addAttributeWithSyntaxText("onChange", this._change_cb);
   }
 
   private createOnChanged() {
@@ -142,23 +147,28 @@ export class UniversalTable extends ZentComponent<IUniversalTable> implements IA
         expressions: [
           `
           try {
-            current = current || ${this.currentState}.pagination.current || 1;
-            pageSize = pageSize || ${this.currentState}.pagination.pageSize || 10;
-            ${this.createUpdateState({ loading: true })}
+            ${this.createUpdateState(`{ loading: true, filters: filters ?? {} }`)}
+            const filterChanged = Object.keys(filters ?? {}).length > 0 && Object.entries(filters ?? {}).some(([k, v]) => ${
+              this.dataCurrent
+            }.filters[k] === v);
+            if (filterChanged) current = 1;
             // throw new Error("developing...");
             // region: mock
             const list = [];
             for (let i = 0; i < pageSize; i++) {
               list.push({ field01: "aaa" + i, field02: "bbb" + i, field03: current, field04: current * pageSize });
             }
-            const { items, pagination } = await Promise.resolve({ items: list, pagination: { current: current, pageSize, total: 200 } });
+            const { items, pagination } = await Promise.resolve({ items: list, pagination: { current, pageSize, total: 200 } });
             // endregion
-            // const { items, pagination } = await ${this.axiosFn}({ url: \`${this.unionQueryWithFetchApi()}\`});
+            // const queries = Object.entries({ ...filters, current, pageSize }).map(([k, v]) => \`\${k}=\${encodeURIComponent(v as string)}\`).join("&");
+            // const { items, pagination } = await ${
+              this.axiosFn
+            }({ url: \`${this.unionQueryWithFetchApi()}\${queries}\`});
             console.log(items);
             console.log(pagination);
             ${this.createUpdateState("{ loading: false, dataset: items || [], pagination: { ...pagination } }")}
           } catch (error) {
-            ${this.tableNotify.name}.error(String(error));
+            ${this._notify.name}.error(String(error));
           }
           `,
         ],
@@ -166,23 +176,29 @@ export class UniversalTable extends ZentComponent<IUniversalTable> implements IA
       contextName,
     );
     this.addUnshiftVariable(
-      this.tableChangeFn,
-      this.helper.createSyntaxExpression(`async ({ current, pageSize }: any) => { ${expression} }`),
+      this._change_fn,
+      this.helper.createSyntaxExpression(`async ({ current, pageSize }: any, filters: any = {}) => { ${expression} }`),
     );
-    this.addUseObservables(this.tableDataContext, this.tableChangeFn.name);
-    this.addUseCallback(this.tableChangeCallback, this.tableChangeFn.name, []);
+    this.addUseObservables(
+      this.$effect,
+      `({ pagination, filters }: any) => ${this._change_fn.name}(pagination, filters)`,
+      void 0,
+      [this._data],
+    );
+    this.addUseCallback(this._change_cb, this._change_fn, [this._data]);
   }
 
   private unionQueryWithFetchApi() {
     const fetchUrl = this.tableFetchUrl ?? "";
-    return `${fetchUrl}${fetchUrl.indexOf("?") < 0 ? "?" : "&"}current=\${current}&pageSize=\${pageSize}`;
+    return `${fetchUrl}${fetchUrl.indexOf("?") < 0 ? "?" : "&"}`;
   }
 
   public afterDirectivesAttach() {
     const columns = this.getState("tableColumns");
     const newColumns = this.resortColumns(columns);
+    this.addAttributeWithSyntaxText("rowKey", !!this.tableRowKey ? `"${this.tableRowKey}"` : columns[0].name ?? '"id"');
     this.addUnshiftVariable(
-      this.tableColumnsVar.name,
+      this._columns.name,
       this.helper.__engine.createIdentifier(`[${newColumns.map(i => this.useEachColumn(i)).join(", ")}]`),
     );
   }

@@ -31,7 +31,7 @@
   },
   "devDependencies": {
     "@amoebajs/basic-modules": "^0.0.1-alpha.1587974139827",
-    "@amoebajs/builder": "^0.0.2-alpha.1587895615458",
+    "@amoebajs/builder": "^0.0.2-alpha.1588075762201",
     "@bigmogician/publisher": "^1.0.12",
     "@types/lodash": "^4.14.149",
     "@types/webpack": "^4.41.0",
