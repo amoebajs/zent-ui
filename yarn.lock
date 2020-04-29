@@ -2,15 +2,15 @@
 # yarn lockfile v1
 
 
-"@amoebajs/basic-modules@^0.0.1-alpha.1587974139827":
-  version "0.0.1-alpha.1587974139827"
-  resolved "https://registry.npmjs.org/@amoebajs/basic-modules/-/basic-modules-0.0.1-alpha.1587974139827.tgz#e789d6084e43821691f348a0e04bbb9b6a4941a1"
-  integrity sha512-E6V2UM7cptLU3nanhoPN/QXuEYeqb4NfD8yit3SISVseLM8NfK+XB5+z7cdDTJ2A7QM6a5mb4lUxHOPARWyt+g==
+"@amoebajs/basic-modules@^0.0.1-alpha.1588141579842":
+  version "0.0.1-alpha.1588141579842"
+  resolved "https://registry.npmjs.org/@amoebajs/basic-modules/-/basic-modules-0.0.1-alpha.1588141579842.tgz#e7360a0401acf1d2af189b195567c893e6b8226e"
+  integrity sha512-VEUg4bSCF3wjzcbFbFDA/JYWtZEv1yEHTE8OTeZ6ql28ACJx41s9gRAEOgo9r/h3UJ0RSba7L5B7+DQicZ26bg==
 
-"@amoebajs/builder@^0.0.2-alpha.1588075762201":
-  version "0.0.2-alpha.1588075762201"
-  resolved "https://registry.npmjs.org/@amoebajs/builder/-/builder-0.0.2-alpha.1588075762201.tgz#baa0181f448475326fce6c37774c0e8f5e1c4a0f"
-  integrity sha512-SKe1VaJzvCTHG9KSRVuqGOB9QWC8ToHyt302Gl9+9Hzq2dFHLvr8oUqeF3x/QTBbMHrb5+qGj2F09yW+PXpNNQ==
+"@amoebajs/builder@^0.0.2-alpha.1588141510772":
+  version "0.0.2-alpha.1588141510772"
+  resolved "https://registry.npmjs.org/@amoebajs/builder/-/builder-0.0.2-alpha.1588141510772.tgz#a0847a62af0225daf4b27cabddbc5310dd056929"
+  integrity sha512-hTtBfM6jLCC9iIBjvLNQAa0Bph9SQLcPj8oyuPOxtLWzcD4cF74Iv+ME5y62aBskJZy0PnejWF5EUnCxJzuKGA==
   dependencies:
     "@bonbons/di" "2.0.0-beta.3"
     "@types/cheerio" "^0.22.15"
@@ -35,6 +35,7 @@
     react "^16.12.0"
     reflect-metadata "^0.1.13"
     style-loader "^1.0.1"
+    ts-import-plugin "^1.6.6"
     ts-loader "^6.2.1"
     tslib "^1.10.0"
     typescript "^3.7.2"
@@ -5761,6 +5762,13 @@ tryer@^1.0.1:
   resolved "https://registry.npm.taobao.org/tryer/download/tryer-1.0.1.tgz#f2c85406800b9b0f74c9f7465b81eaad241252f8"
   integrity sha1-8shUBoALmw90yfdGW4HqrSQSUvg=
 
+ts-import-plugin@^1.6.6:
+  version "1.6.6"
+  resolved "https://registry.npmjs.org/ts-import-plugin/-/ts-import-plugin-1.6.6.tgz#d348f0e16bca7ffef74cc582cee10ad0e73204bf"
+  integrity sha512-u0c1YsVlKIALIkei0qqsCY3CcfOl+WdOKy0keTQM5T75jd2eLfuLJwsnhtHxstW9Ha51kZADHXj4EfP+Z0C+tQ==
+  dependencies:
+    tslib "^1.11.1"
+
 ts-loader@^6.2.1:
   version "6.2.1"
   resolved "https://registry.npm.taobao.org/ts-loader/download/ts-loader-6.2.1.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fts-loader%2Fdownload%2Fts-loader-6.2.1.tgz#67939d5772e8a8c6bdaf6277ca023a4812da02ef"
@@ -5833,6 +5841,11 @@ tslib@^1.10.0, tslib@^1.9.0, tslib@^1.9.3:
   version "1.10.0"
   resolved "https://registry.npm.taobao.org/tslib/download/tslib-1.10.0.tgz#c3c19f95973fb0a62973fb09d90d961ee43e5c8a"
   integrity sha1-w8GflZc/sKYpc/sJ2Q2WHuQ+XIo=
+
+tslib@^1.11.1:
+  version "1.11.1"
+  resolved "https://registry.npmjs.org/tslib/-/tslib-1.11.1.tgz#eb15d128827fbee2841549e171f45ed338ac7e35"
+  integrity sha512-aZW88SY8kQbU7gpV19lN24LtXh/yD4ZZg6qieAJDDg+YBsJcSmLGK9QpnUjAKVG/xefmvJGd1WUmfpT/g6AJGA==
 
 tty-browserify@0.0.0:
   version "0.0.0"

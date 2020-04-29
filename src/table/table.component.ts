@@ -69,17 +69,19 @@ export class UniversalTable extends ZentComponent<IUniversalTable> implements IA
   @Input({ name: "rowKey" })
   public tableRowKey?: string;
 
-  @Observable("effect")
-  protected $effect = Observer.Create({
+  @Observable("data")
+  protected $data = Observer.Create({
     loading: true,
     dataset: [],
-    filters: {},
     pagination: {
       current: 0,
       pageSize: 10,
       total: 0,
     },
   });
+
+  @Observable("filters")
+  protected $filters = Observer.Create({});
 
   protected get dataCurrent() {
     return this._data.name;
@@ -105,28 +107,16 @@ export class UniversalTable extends ZentComponent<IUniversalTable> implements IA
     return this.getSetState(this._data.name);
   }
 
-  protected createUpdateState(payload: string | Record<string, any>) {
-    return `${this.setStateFn}({ ...${this.dataCurrent}, ...(${
-      typeof payload === "string" ? payload : JSON.stringify(payload)
-    }) });`;
-  }
-
   public afterInit() {
     super.afterInit();
     this.createContext();
     this.createRootElement();
     this.createElementProps();
-    this.createObservables();
     this.createOnChanged();
   }
 
-  private createObservables() {
-    this.addUseState(this._data.name, this.getNamedObserver(this.$effect.name, "data"));
-    // this.addUseRef(this.tableDataVar, this.getNamedObserver(this.tableDataContext.name, "data"));
-  }
-
   private createRootElement() {
-    this.setTagName(this._table.name);
+    this.setTagName(this._table);
   }
 
   private createContext() {
@@ -141,51 +131,53 @@ export class UniversalTable extends ZentComponent<IUniversalTable> implements IA
   }
 
   private createOnChanged() {
-    const contextName = this.getState(BasicState.ContextInfo).name;
-    const expression = this.helper.useComplexLogicExpression(
-      {
-        expressions: [
-          `
-          try {
-            ${this.createUpdateState(`{ loading: true, filters: filters ?? {} }`)}
-            const filterChanged = Object.keys(filters ?? {}).length > 0 && Object.entries(filters ?? {}).some(([k, v]) => ${
-              this.dataCurrent
-            }.filters[k] === v);
-            if (filterChanged) current = 1;
-            // throw new Error("developing...");
-            // region: mock
-            const list = [];
-            for (let i = 0; i < pageSize; i++) {
-              list.push({ field01: "aaa" + i, field02: "bbb" + i, field03: current, field04: current * pageSize });
-            }
-            const { items, pagination } = await Promise.resolve({ items: list, pagination: { current, pageSize, total: 200 } });
-            // endregion
-            // const queries = Object.entries({ ...filters, current, pageSize }).map(([k, v]) => \`\${k}=\${encodeURIComponent(v as string)}\`).join("&");
-            // const { items, pagination } = await ${
-              this.axiosFn
-            }({ url: \`${this.unionQueryWithFetchApi()}\${queries}\`});
-            console.log(items);
-            console.log(pagination);
-            ${this.createUpdateState("{ loading: false, dataset: items || [], pagination: { ...pagination } }")}
-          } catch (error) {
-            ${this._notify.name}.error(String(error));
-          }
-          `,
-        ],
-      },
-      contextName,
-    );
     this.addUnshiftVariable(
       this._change_fn,
-      this.helper.createSyntaxExpression(`async ({ current, pageSize }: any, filters: any = {}) => { ${expression} }`),
+      this.helper.createSyntaxExpression(`async ({ current, pageSize }: any, filters: any = {}) => {
+        try {
+          ${this.nextObserverData(this.$data, `{ loading: true }`)}
+          ${this.nextObserverData(this.$filters, `filters`)}
+
+          const preFilters = ${this.getNamedObserver(this.$filters, "data")};
+          const filterChanged = 
+            Object.keys(filters ?? {}).length > 0 && 
+            Object.entries(filters ?? {}).some(([k, v]) => preFilters[k] === v);
+          if (filterChanged) current = 1;
+
+          // region: mock
+          // throw new Error("developing...");
+          const list = [];
+          for (let i = 0; i < pageSize; i++) {
+            list.push({ field01: "aaa" + i, field02: "bbb" + i, field03: current, field04: current * pageSize });
+          }
+          const { items, pagination } = await Promise.resolve({ items: list, pagination: { current, pageSize, total: 200 } });
+          // endregion
+
+          // const queries = Object.entries({ ...filters, current, pageSize }).map(([k, v]) => \`\${k}=\${encodeURIComponent(v as string)}\`).join("&");
+          // const { items, pagination } = await ${this.axiosFn}({
+          //   url: \`${this.unionQueryWithFetchApi()}\${queries}\`
+          // });
+
+          console.log(items);
+          console.log(pagination);
+          ${this.nextObserverData(
+            this.$data,
+            "{ loading: false, dataset: items || [], pagination: { ...pagination } }",
+          )}
+        } catch (error) {
+          ${this._notify}.error(String(error));
+        }
+      }`),
     );
-    this.addUseObservables(
-      this.$effect,
-      `({ pagination, filters }: any) => ${this._change_fn.name}(pagination, filters)`,
-      void 0,
-      [this._data],
-    );
+    this.addUseObservables(this._data, this.$data);
     this.addUseCallback(this._change_cb, this._change_fn, [this._data]);
+    this.addUseEffect(
+      null,
+      `() => {
+        ${this._change_fn}({ current: 1, pageSize: 10 }, ${this._data}.filters ?? {});
+        return () => {};
+      }`,
+    );
   }
 
   private unionQueryWithFetchApi() {
