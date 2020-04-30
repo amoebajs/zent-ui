@@ -61,6 +61,7 @@ builder
       encoding: "utf8",
     });
     fs.writeFileSync(path.resolve(outDir, "dependencies.json"), JSON.stringify(dependencies, null, "  "), {
+      flag: "w+",
       encoding: "utf8",
     });
     console.log("emit ---> " + path.resolve(outDir, MAIN));

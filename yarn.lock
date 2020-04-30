@@ -7,10 +7,10 @@
   resolved "https://registry.npmjs.org/@amoebajs/basic-modules/-/basic-modules-0.0.1-alpha.1588218393163.tgz#0b029734a36d33eeca20ab95b681b4fba7d10b03"
   integrity sha512-duIq9QjOG5ggIxXTFy7WeXvpPohDonzvhy6F1kF691Ps/LKnTNiT8jAeQYnLOGXyI6CCvB9gt9Za+5oBYnIJSw==
 
-"@amoebajs/builder@^0.0.2-alpha.1588218339968":
-  version "0.0.2-alpha.1588218339968"
-  resolved "https://registry.npmjs.org/@amoebajs/builder/-/builder-0.0.2-alpha.1588218339968.tgz#b69a4679fabcc7725de986b65e08042ef13cae02"
-  integrity sha512-EbRlW7YGHIgqZBmeqlJyMvogMuoqdOzV0WUnk456Rmaj6qPeir7r2hKBqDyvefTDDk0fEzU1Wh3c0+XCMQE+2w==
+"@amoebajs/builder@^0.0.2-alpha.1588228485791":
+  version "0.0.2-alpha.1588228485791"
+  resolved "https://registry.npmjs.org/@amoebajs/builder/-/builder-0.0.2-alpha.1588228485791.tgz#50e0dba209f15c0beaf722b0b76753ab8c4dbbab"
+  integrity sha512-1YE8WmpL2llRutziekMSdYBP6cH8Q6JH7u4//I/fasA8FrUeNHyuiirdwaUvoPcK+qi2pfWann/kkJdZE0RiTQ==
   dependencies:
     "@bonbons/di" "2.0.0-beta.3"
     "@types/cheerio" "^0.22.15"
