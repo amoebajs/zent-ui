@@ -35,6 +35,8 @@ import { TitleComponent } from "./title/title.component";
     UniversalTableColumn,
   ],
   dependencies: {
+    dateFns: "^2.12.0",
+    lodash: "^4.17.0",
     rxjs: "^6.5.3",
     zent: "^8.0.0",
     zanPcAjax: "^4.0.0",
