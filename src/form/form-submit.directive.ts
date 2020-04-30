@@ -1,4 +1,4 @@
-import { Directive, Reference, Input, VariableRef, Utils } from "@amoebajs/builder";
+import { Directive, Reference, Input, VariableRef, EntityVariableRef, Utils } from "@amoebajs/builder";
 import { ZentDirective } from "../base/base.directive";
 import { IUniversalFormState } from "./form.component";
 
@@ -37,6 +37,16 @@ export class UniversalFormSubmit extends ZentDirective<IUniversalFormState> {
   @Input({ name: "cancelText" })
   public formCancelText!: string;
 
+  @Input({ useRef: "observable" })
+  public filters!: EntityVariableRef;
+
+  @Reference("click-fn")
+  protected filterOnClick!: VariableRef;
+
+  protected get nextFn() {
+    return this.render.component.getNamedObserver(this.filters.name, "next");
+  }
+
   protected async onAttach() {
     const refname = this.render.component.getState("formRefname");
     const childset = this.render.component.getState("formFields");
@@ -67,6 +77,7 @@ export class UniversalFormSubmit extends ZentDirective<IUniversalFormState> {
         key: `"${this.formCancelId.name}"`,
         type: `"${"default"}"`,
       });
+    cancel.addJsxAttr("onClick", `() => ${this.nextFn}({})`);
     cancel.addJsxChild(this.formCancelText ?? "取消");
     return cancel;
   }
@@ -79,7 +90,8 @@ export class UniversalFormSubmit extends ZentDirective<IUniversalFormState> {
         type: `"${"primary"}"`,
       });
     if (this.formSubmitType === FormSubmitType.Console) {
-      confirm.addJsxAttr("onClick", `() => console.log(${refname}.getValue())`);
+      // confirm.addJsxAttr("onClick", `() => console.log(${refname}.getValue())`);
+      confirm.addJsxAttr("onClick", `() => ${this.nextFn}(${refname}.getValue())`);
     } else if (this.formSubmitType === FormSubmitType.Ajax) {
       // TODO
       confirm.addJsxAttr("onClick", `() => console.log("TO DO")`);

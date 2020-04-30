@@ -132,33 +132,25 @@ export class UniversalTable extends ZentComponent<IUniversalTable> implements IA
   private createOnChanged() {
     this.addUnshiftVariable(
       this._change_fn,
-      this.helper.createSyntaxExpression(`async ({ current, pageSize }: any, filters: any = {}) => {
+      this.helper.createSyntaxExpression(`async ({ current, pageSize }: any) => {
         try {
           ${this.nextObserverData(this.$data, `{ loading: true }`)}
-          ${this.nextObserverData(this.$filters, `filters`)}
-
-          const preFilters = ${this.getNamedObserver(this.$filters, "data")};
-          const filterChanged = 
-            Object.keys(filters ?? {}).length > 0 && 
-            Object.entries(filters ?? {}).some(([k, v]) => preFilters[k] === v);
-          if (filterChanged) current = 1;
+          const filters = ${this.getNamedObserver(this.$filters, "data")};
+          const queries = Object.entries({ ...filters, current, pageSize }).map(([k, v]) => \`\${k}=\${encodeURIComponent(v as string)}\`).join("&");
 
           // region: mock
-          // throw new Error("developing...");
           const list = [];
           for (let i = 0; i < pageSize; i++) {
             list.push({ field01: "aaa" + i, field02: "bbb" + i, field03: current, field04: current * pageSize });
           }
           const { items, pagination } = await Promise.resolve({ items: list, pagination: { current, pageSize, total: 200 } });
+          console.log(\`${this.unionQueryWithFetchApi()}\${queries}\`);
           // endregion
 
-          // const queries = Object.entries({ ...filters, current, pageSize }).map(([k, v]) => \`\${k}=\${encodeURIComponent(v as string)}\`).join("&");
           // const { items, pagination } = await ${this.axiosFn}({
           //   url: \`${this.unionQueryWithFetchApi()}\${queries}\`
           // });
 
-          console.log(items);
-          console.log(pagination);
           ${this.nextObserverData(
             this.$data,
             "{ loading: false, dataset: items || [], pagination: { ...pagination } }",
@@ -173,9 +165,14 @@ export class UniversalTable extends ZentComponent<IUniversalTable> implements IA
     this.addUseEffect(
       null,
       `() => {
-        ${this._change_fn}({ current: 1, pageSize: 10 }, ${this._data}.filters ?? {});
+        ${this._change_fn}({ current: 1, pageSize: 10 });
         return () => {};
       }`,
+    );
+    this.addUseRxjsWatch(
+      this.getNamedObserver(this.$filters, "observable"),
+      `(data: any) => ${this._change_fn}({ ...${this.dataCurrent}.pagination, current: 1 })`,
+      false,
     );
   }
 

@@ -9,6 +9,8 @@ import { UniversalForm, IUniversalFormState } from "../form/form.component";
 export class FilterBoardComponent extends UniversalForm {
   public afterInit() {
     super.afterInit();
+    // console.log(this.observer);
+    // this.addUseCallback(this.filterOnClick, `(data: any = {}) => { ${this.observer}.next({ ...data }); }`);
   }
 
   protected getFormStyles(): Record<string, any> {

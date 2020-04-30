@@ -133,7 +133,15 @@
             "input": {
               "showCancel": { "type": "literal", "expression": true },
               "submitText": { "type": "literal", "expression": "筛选" },
-              "cancelText": { "type": "literal", "expression": "清空筛选条件" }
+              "cancelText": { "type": "literal", "expression": "清空筛选条件" },
+              "filters": {
+                "type": "entityRef",
+                "expression": {
+                  "type": "observable",
+                  "ref": "Section01Content",
+                  "expression": "filters"
+                }
+              }
             }
           }
         ]
