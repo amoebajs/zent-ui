@@ -87,7 +87,7 @@ export class UniversalTable extends ZentComponent<IUniversalTable> implements IA
   }
 
   protected get tableLoading() {
-    return this.tableAutoLoading ? this.dataCurrent + ".loading" : false;
+    return this.tableAutoLoading ? this.dataCurrent + ".loading" : "false";
   }
 
   protected get datasetName() {
