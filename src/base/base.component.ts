@@ -6,6 +6,14 @@ export type IDecide = "||" | "??";
 @Component({ name: "component-base", displayName: "Zent基础组件" })
 @Require(ZentCssImportDirective, { target: "base" })
 export class ZentComponent<T extends Record<string, any> = {}> extends ReactComponent<T> {
+  protected getElementStyles(): Record<string, any> {
+    return {};
+  }
+
+  protected createSyntaxStyles(styles?: Record<string, any>) {
+    return `{ ...(${JSON.stringify(styles ?? this.getElementStyles())}), ...${Utils.REACT.Props}.style }`;
+  }
+
   protected useStringProp(prop: string, input: string[] | string | boolean, decide: IDecide = "||"): string {
     let value = "";
     if (Utils.is.array(input)) value = input.join(" ");

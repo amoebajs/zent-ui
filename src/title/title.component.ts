@@ -24,7 +24,7 @@ export class TitleComponent extends ZentComponent {
   public afterInit() {
     super.afterInit();
     this.setTagName(Utils.DOMS.Div);
-    this.addAttributeWithSyntaxText("style", JSON.stringify(this.getTitleStyles()));
+    this.addAttributeWithSyntaxText("style", this.createSyntaxStyles());
     this.addRenderPushedChild(
       this.createNode("jsx-element")
         .setTagName(Utils.DOMS.Div)
@@ -57,7 +57,7 @@ export class TitleComponent extends ZentComponent {
     };
   }
 
-  protected getTitleStyles() {
+  protected getElementStyles() {
     return {
       display: "flex",
       alignItems: "flex-end",

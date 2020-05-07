@@ -154,15 +154,15 @@ page:
             value:
               type: literal
               expression: true
-        - ref: ZentFormSubmit
-          id: FormSubmitInstance
-          input:
-            showCancel:
-              type: literal
-              expression: true
-            submitText:
-              type: literal
-              expression: 提交
-            cancelText:
-              type: literal
-              expression: 放弃
+        # - ref: ZentFormSubmit
+        #   id: FormSubmitInstance
+        #   input:
+        #     showCancel:
+        #       type: literal
+        #       expression: true
+        #     submitText:
+        #       type: literal
+        #       expression: 提交
+        #     cancelText:
+        #       type: literal
+        #       expression: 放弃

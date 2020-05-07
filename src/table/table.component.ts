@@ -123,6 +123,7 @@ export class UniversalTable extends ZentComponent<IUniversalTable> implements IA
   }
 
   private createElementProps() {
+    this.addAttributeWithSyntaxText("style", this.createSyntaxStyles());
     this.addAttributeWithSyntaxText("columns", this._columns);
     this.addAttributeWithSyntaxText("datasets", this.datasetName);
     this.addAttributeWithSyntaxText("pageInfo", this.paginationName);

@@ -56,7 +56,7 @@ export class UniversalForm<T extends IUniversalFormState = IUniversalFormState> 
     this.setState("formRefname", this.formRefname.name);
     this.addAttributeWithSyntaxText("form", this.formRefname);
     this.addAttributeWithSyntaxText("layout", `"${this.formDirection}"`);
-    this.addAttributeWithSyntaxText("style", JSON.stringify(this.getFormStyles()));
+    this.addAttributeWithSyntaxText("style", this.createSyntaxStyles());
     this.addUnshiftVariable(this.formRefname, this.createRefExpression());
   }
 
@@ -68,10 +68,6 @@ export class UniversalForm<T extends IUniversalFormState = IUniversalFormState> 
   public afterDirectivesAttach() {
     super.afterDirectivesAttach();
     this.beforeFormChildrenToRender(this.render.component.getState("formFields"));
-  }
-
-  protected getFormStyles(): Record<string, any> {
-    return {};
   }
 
   protected beforeFormChildrenToRender(set: T["formFields"]) {
