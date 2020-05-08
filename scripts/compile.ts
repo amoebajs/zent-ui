@@ -5,6 +5,7 @@ import chalk from "chalk";
 import { Factory } from "@amoebajs/builder";
 import { CommonModule, LayoutModule, CompositionModule } from "@amoebajs/basic-modules";
 import { ZentModule } from "../index";
+import { ZentDemoModule } from "../src/demo";
 
 if (process.env.ENV_MODE === "watch") {
   require("./watch-config");
@@ -45,7 +46,8 @@ const builder = new Factory()
   .useModule(CommonModule)
   .useModule(LayoutModule)
   .useModule(CompositionModule)
-  .useModule(ZentModule).builder;
+  .useModule(ZentModule)
+  .useModule(ZentDemoModule).builder;
 // console.log(JSON.stringify(demoConf, null, 2));
 // console.log(JSON.stringify(builder["globalMap"].maps, null, "  "));
 builder

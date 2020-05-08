@@ -1,0 +1,25 @@
+{
+  "provider": "react",
+  "framework": { "sdk": "0.0.1" },
+  "components": [],
+  "directives": [],
+  "compositions": [
+    {
+      "id": "LoadingComposition",
+      "name": "demo-loading",
+      "module": "zent-demo-module",
+      "version": "0.0.1-beta.0"
+    }
+  ],
+  "page": {
+    "ref": "LoadingComposition",
+    "id": "App",
+    "slot": "app",
+    "input": {
+      "expression": {
+        "type": "literal",
+        "expression": "false"
+      }
+    }
+  }
+}

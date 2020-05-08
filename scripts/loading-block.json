@@ -1,0 +1,36 @@
+{
+  "provider": "react",
+  "framework": { "sdk": "0.0.1" },
+  "components": [
+    {
+      "id": "LoadingBlock",
+      "name": "loading",
+      "module": "zent-module",
+      "version": "0.0.1-beta.0"
+    },
+    {
+      "id": "StackLayout",
+      "name": "stack-layout",
+      "module": "ambjs-layout-module",
+      "version": "0.0.1-beta.0"
+    }
+  ],
+  "directives": [],
+  "compositions": [],
+  "page": {
+    "ref": "LoadingBlock",
+    "id": "App",
+    "slot": "app",
+    "input": {},
+    "children": [
+      {
+        "ref": "StackLayout",
+        "id": "Child01"
+      },
+      {
+        "ref": "StackLayout",
+        "id": "Child02"
+      }
+    ]
+  }
+}
